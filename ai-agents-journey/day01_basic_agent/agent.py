@@ -8,7 +8,7 @@ import os
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
-# --- Step 1: Python tools ---
+# Tools
 def add(a, b):
     return a + b
 
@@ -20,7 +20,7 @@ TOOL_FUNCTIONS = {
     "subtract": subtract,
 }
 
-# --- Step 2: Tool schema ---
+# Tool Schema
 tools = [
     {
         "type": "function",
@@ -54,7 +54,7 @@ tools = [
     },
 ]
 
-# --- Step 3: Query ---
+# Query
 query = (
     "Task: Calculate 55 + 21, then subtract 10 from the result."
     "You must complete the entire task using multiple tool calls if needed."
@@ -62,7 +62,7 @@ query = (
     "Do not stop until the final result is reached."
 )
 
-# --- Step 4: Call Groq ---
+# Calling groq
 response = client.chat.completions.create(
     model="llama-3.3-70b-versatile",
     messages=[{"role": "user", "content": query}],
@@ -71,7 +71,7 @@ response = client.chat.completions.create(
 
 print("\nRAW RESPONSE:\n", response, "\n")
 
-# --- Step 5: Handle tool calls ---
+#Handling Tool calls
 msg = response.choices[0].message
 
 if msg.tool_calls:
