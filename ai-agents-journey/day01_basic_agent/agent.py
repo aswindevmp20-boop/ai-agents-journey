@@ -97,3 +97,13 @@ if msg.tool_calls:
         # Execute tool
         result = TOOL_FUNCTIONS[fn_name](**args)
         print("Tool result:", result)
+
+
+# Expected Output:- 
+
+# Raw args string: {"a":55,"b":21}
+# Tool called: add, args={'a': 55, 'b': 21}
+# Tool result: 76
+# Raw args string: {"a":76,"b":10}
+# Tool called: subtract, args={'a': 76, 'b': 10}
+# Tool result: 66
