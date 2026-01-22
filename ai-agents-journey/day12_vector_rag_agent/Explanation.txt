@@ -1,0 +1,362 @@
+# Up to now:
+# Day 5 → keyword RAG
+# Day 11 → chunked keyword RAG
+
+# Today:
+# ❌ No keyword matching
+# ✅ Semantic meaning
+# ✅ Vector similarity
+# ✅ Embeddings
+
+# Vector Embeddings :- 
+# Vector embeddings are crucial in Retrieval-Augmented Generation (RAG) because they convert text into dense numerical vectors, 
+# capturing semantic meaning, which allows RAG systems to perform fast, context-aware similarity searches to find relevant information for LLMs, 
+# grounding their responses in external knowledge rather than just internal training data.
+
+
+# Documents
+#    ↓
+# Chunking
+#    ↓
+# Embeddings (vectors)
+#    ↓
+# Similarity Search (cosine similarity)
+#    ↓
+# Top-K chunks
+#    ↓
+# LLM answer grounded in context
+
+
+To keep this fully local & free:
+
+    sentence-transformers
+
+    Model: all-MiniLM-L6-v2
+
+    Pure Python cosine similarity
+
+    No vector DB yet (FAISS comes Day 13)
+
+
+pip install sentence-transformers scikit-learn
+
+***************************************************************************************
+
+    Step-by-Step: How the Tool Works Internally
+
+        Let’s break it into 4 stages.
+
+        ① Before the tool is ever called (Preprocessing)
+
+            This happens once when the app starts.
+
+            A. Documents are chunked
+
+                Each document is split into small chunks:
+
+                doc1.txt
+                ├─ chunk 1
+                ├─ chunk 2
+                └─ chunk 3
+
+
+                Why?
+
+                LLM context is limited
+
+                Smaller chunks = more precise retrieval
+
+            B. Each chunk is converted into a vector (embedding)
+
+                Example (conceptual):
+
+                "Oceans regulate climate"
+                → [0.021, -0.334, 0.872, ...]  (384 numbers)
+
+
+                This vector represents meaning, not words.
+
+                So now you have:
+
+                Chunk text  →  Vector embedding
+
+
+                These embeddings are stored in memory.
+
+                  This step happens before any user query.
+
+        ② User asks a question
+
+            Example:
+
+                "Why are oceans important for climate regulation?"
+
+
+            At this point:
+
+                LLM does NOT know the answer
+
+                It also does NOT see the documents yet
+
+        ③ LLM decides to call the tool
+
+            Because of this system instruction:
+
+                "Always retrieve relevant document chunks before answering."
+
+
+            The LLM outputs something like:
+
+                {
+                "name": "retrieve_chunks",
+                "arguments": {
+                    "query": "Why are oceans important for climate regulation?",
+                    "top_k": 3
+                }
+                }
+
+
+             This is the decision point.
+
+             The LLM is saying:
+
+                 “I need external knowledge before I answer.”
+
+        ④ The Tool Executes (This is the core)
+
+            Now the Python tool takes over.
+
+            A. Embed the user query
+                "Why are oceans important for climate regulation?"
+                → [0.017, -0.298, 0.901, ...]
+
+
+            Now both:
+
+                query
+
+                document chunks
+
+                are in the same vector space.
+
+            B. Compare query vector with every chunk vector
+
+                Using cosine similarity:
+
+                Similarity(query, chunk_1) → 0.89
+                Similarity(query, chunk_2) → 0.12
+                Similarity(query, chunk_3) → 0.76
+
+
+                This measures semantic closeness, not word overlap.
+
+                Example insight:
+
+                    Query does NOT need the word “regulation”
+
+                    It still matches chunks about climate impact
+
+            C. Rank chunks by similarity
+                Ranked results:
+                    1️⃣ chunk about ocean heat absorption
+                    2️⃣ chunk about CO₂ absorption
+                    3️⃣ chunk about ocean currents
+
+                Only the top-K are returned.
+
+        ⑤ Tool returns context to the LLM
+
+            The tool sends back plain text, not vectors:
+
+            [doc1_oceans.txt]
+            Oceans absorb large amounts of heat and carbon dioxide...
+
+            [doc1_oceans.txt]
+            Ocean currents distribute heat across the planet...
+
+
+            This is injected into the conversation as:
+
+                {
+                "role": "tool",
+                "content": "retrieved context"
+                }
+
+        ⑥ LLM generates the final answer
+
+            Now (and only now), the LLM answers:
+
+            using the retrieved chunks
+
+            grounded in facts
+
+            without hallucinating
+
+            This is Retrieval-Augmented Generation.
+
+
+***************************************************************************************
+DOCUMENT_CHUNKS, CHUNK_EMBEDDINGS = load_and_embed()
+
+
+DOCUMENT_CHUNKS = [
+    {
+        "file": "doc1_oceans.txt",
+        "content": "Oceans absorb large amounts of heat..."
+    },
+    {
+        "file": "doc1_oceans.txt",
+        "content": "Overfishing and pollution threaten marine life..."
+    },
+    {
+        "file": "doc2_ai.txt",
+        "content": "Artificial intelligence is transforming industries..."
+    }
+]
+
+
+CHUNK_EMBEDDINGS = [
+    [0.12, -0.44, 0.78, ...],   # embedding for chunk 1
+    [0.05, -0.31, 0.66, ...],   # embedding for chunk 2
+    [0.91, -0.22, 0.10, ...],   # embedding for chunk 3
+]
+
+Each vector corresponds exactly to the chunk at the same index in DOCUMENT_CHUNKS.
+
+So:
+
+DOCUMENT_CHUNKS[i]  <-->  CHUNK_EMBEDDINGS[i]
+
+
+This alignment is critical.
+
+
+**************************************************************************************************
+ranked = sorted(
+    zip(scores, DOCUMENT_CHUNKS),
+    key=lambda x: x[0],
+    reverse=True
+)
+
+1️⃣ scores
+
+Earlier, you computed:
+
+scores = cosine_similarity([query_embedding], CHUNK_EMBEDDINGS)[0]
+
+
+This gives you something like:
+
+scores = [0.89, 0.12, 0.76, 0.05]
+
+
+Each number means:
+
+“How semantically close this chunk is to the query”
+
+Higher = more relevant.
+
+2️⃣ DOCUMENT_CHUNKS
+
+This is a list of chunk objects:
+
+DOCUMENT_CHUNKS = [
+    {"file": "doc1.txt", "content": "Oceans absorb heat..."},
+    {"file": "doc1.txt", "content": "Marine ecosystems..."},
+    {"file": "doc2.txt", "content": "AI is transforming..."},
+    {"file": "doc3.txt", "content": "Traveling allows people..."}
+]
+
+3️⃣ zip(scores, DOCUMENT_CHUNKS)
+
+This pairs each score with its corresponding chunk.
+
+Result:
+
+zip(scores, DOCUMENT_CHUNKS)
+
+
+Becomes (conceptually):
+
+[
+  (0.89, {"file": "doc1.txt", "content": "Oceans absorb heat..."}),
+  (0.12, {"file": "doc1.txt", "content": "Marine ecosystems..."}),
+  (0.76, {"file": "doc2.txt", "content": "AI is transforming..."}),
+  (0.05, {"file": "doc3.txt", "content": "Traveling allows people..."})
+]
+
+
+⚠️ Important rule:
+This works only because scores[i] corresponds to DOCUMENT_CHUNKS[i].
+
+That alignment was created earlier by:
+
+DOCUMENT_CHUNKS, CHUNK_EMBEDDINGS = load_and_embed()
+
+4️⃣ sorted(...)
+
+Now we sort those (score, chunk) pairs.
+
+sorted(
+    zip(scores, DOCUMENT_CHUNKS),
+    key=lambda x: x[0],
+    reverse=True
+)
+
+
+Let’s decode this.
+
+5️⃣ key=lambda x: x[0]
+
+Each x looks like:
+
+x = (score, chunk)
+
+
+So:
+
+x[0] = score
+x[1] = chunk
+
+
+This tells Python:
+
+“Sort by the score, not the chunk text.”
+
+6️⃣ reverse=True
+
+By default, sorting is ascending (small → big).
+
+But we want:
+
+Highest similarity first
+
+So:
+
+reverse=True
+
+
+Gives:
+
+[
+  (0.89, {...}),
+  (0.76, {...}),
+  (0.12, {...}),
+  (0.05, {...})
+]
+
+🏆 Final result stored in ranked
+ranked = [
+  (0.89, chunk_about_oceans),
+  (0.76, chunk_about_ai),
+  (0.12, chunk_about_marine_ecosystems),
+  (0.05, chunk_about_travel)
+]
+
+
+Now you can safely do:
+
+top_chunks = ranked[:top_k]
+
+
+And retrieve only the most relevant knowledge.
