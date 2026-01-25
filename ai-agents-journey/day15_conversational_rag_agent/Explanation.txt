@@ -1,0 +1,30 @@
+What is Conversational RAG?
+
+    Instead of:
+
+        User: What are threats to ocean health?
+        Agent: answer
+        User: Why are they dangerous?
+        ❌ Agent forgets what "they" means
+
+
+    We build:
+
+        User: What are threats to ocean health?
+        Agent: answer
+        User: Why are they dangerous?
+        ✅ Agent remembers context (threats)
+
+
+    So now the pipeline becomes:
+
+        Conversation History
+                +
+        User Query
+                ↓
+        Hybrid RAG Retrieval
+                ↓
+        LLM Answer grounded in docs + memory
+
+
+****************************************************************************
