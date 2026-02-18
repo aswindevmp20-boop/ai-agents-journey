@@ -1,0 +1,23 @@
+Instead of storing raw text and loading everything, we:
+
+Convert conversations into embeddings
+
+Store them in a FAISS vector database
+
+Retrieve the most relevant past memory for each new query
+
+Architecture
+
+    User Query
+      ↓
+    Embed query
+      ↓
+    Search vector DB (FAISS)
+      ↓
+    Relevant memory chunks
+      ↓
+    LLM + tools
+      ↓
+    Final Answer
+      ↓
+    Save new memory as embedding

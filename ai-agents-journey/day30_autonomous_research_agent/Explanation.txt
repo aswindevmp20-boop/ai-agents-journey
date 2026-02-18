@@ -1,0 +1,46 @@
+
+
+
+Until now:
+
+    Agent plans once
+
+    Executes once
+
+    Finishes
+
+Today:
+
+    The agent researches → evaluates → refines → researches again
+    until it decides the answer is good enough.
+
+This is how:
+
+    Deep research agents work
+
+    AI analysts operate
+
+    Advanced autonomous systems refine output
+
+Architecture
+
+    User Question
+        ↓
+    Initial Research
+        ↓
+    Evaluate answer quality
+        ↓
+    If incomplete → Refine query
+        ↓
+    Research again
+        ↓
+    Final Answer
+
+
+This introduces:
+
+    Iterative reasoning
+
+    Self-evaluation
+
+    Improvement loop

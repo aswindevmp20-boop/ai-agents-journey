@@ -1,0 +1,50 @@
+We create two agents:
+
+    1. Planner Agent
+
+        Responsible for:
+
+            Understanding the user question
+
+            Breaking it into steps
+
+            Deciding what needs to be done
+
+        Example output:
+
+            Step 1: Search documents about ocean health threats  
+            Step 2: Summarize the threats  
+            Step 3: Answer the user clearly
+
+    2. Worker Agent
+
+        Responsible for:
+
+            Executing the plan
+
+            Calling tools (RAG retrieval)
+
+            Producing the final answer
+
+Architecture
+
+    User Query
+    ↓
+    Planner Agent (creates plan)
+    ↓
+    Worker Agent (executes plan)
+    ↓
+    RAG Retrieval Tool
+    ↓
+    Final Answer
+
+
+This separation gives:
+
+    Better reasoning
+
+    Clear control flow
+
+    Debuggable logic
+
+    Extendable system (add more agents later)

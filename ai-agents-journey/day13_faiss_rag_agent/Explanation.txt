@@ -1,0 +1,176 @@
+   cosine_similarity(query, ALL_EMBEDDINGS)
+
+This means:
+
+    Compare query with every chunk
+
+    Time grows linearly ❌
+
+    Not scalable ❌
+
+FAISS gives:
+
+    Optimized vector indexing
+
+    Fast nearest-neighbor search
+
+    Industry-grade retrieval
+
+
+************************************************************
+
+Architecture Upgrade (Day 13)
+
+        Documents
+        ↓
+        Chunking
+        ↓
+        Embeddings
+        ↓
+        FAISS Index  
+        ↓
+        Top-K vectors
+        ↓
+        LLM Answer
+
+************************************************************
+
+        embeddings = embedder.encode(
+            [c["content"] for c in DOCUMENT_CHUNKS],
+            convert_to_numpy = True
+        )
+
+
+What this block does :
+
+    It creates a FAISS vector index of the correct size and loads all document embeddings into it so they can be searched efficiently.
+
+Line-by-line explanation
+    1️. dimension = embeddings.shape[1]
+
+        What is embeddings?
+
+            Earlier you created embeddings like this:
+
+            embeddings = embedder.encode(
+                [c["content"] for c in DOCUMENT_CHUNKS],
+                convert_to_numpy=True
+            )
+
+
+        So embeddings looks like:
+
+            embeddings.shape == (N, D)
+
+
+        Where:
+
+            N = number of document chunks
+
+            D = size of each embedding vector
+
+        Example:
+
+            (24, 384)
+
+
+        That means:
+
+            24 chunks
+
+            each chunk → 384-dimensional vector
+
+        So:
+
+            dimension = embeddings.shape[1]
+
+
+        Extracts:
+
+            dimension = 384
+
+
+        ⚠️ FAISS must know the vector dimension in advance.
+
+
+    2️.index = faiss.IndexFlatL2(dimension)
+
+        This creates a FAISS index.
+
+        Let’s break it:
+
+            IndexFlatL2
+
+                Flat → brute-force (exact search)
+
+                L2 → Euclidean distance
+
+        Meaning:
+
+            “Compare query vector against every stored vector using L2 distance.”
+
+        This is:
+
+            exact (no approximation)
+
+            fast for small–medium datasets
+
+            perfect for learning & demos
+
+        FAISS now knows:
+
+            vector size = dimension
+
+            distance metric = L2
+
+    3️.index.add(embeddings)
+
+        This line:
+
+            stores all vectors inside the FAISS index
+
+        FAISS now internally holds:
+
+            Vector 0 → chunk 0
+            Vector 1 → chunk 1
+            Vector 2 → chunk 2
+            ...
+
+
+        The order matters.
+
+        FAISS does not store metadata.
+
+        It only stores vectors.
+
+        That’s why later you do:
+
+            DOCUMENT_CHUNKS[idx]
+
+
+        Because:
+
+            FAISS returns indices
+
+        You map them back to text yourself
+
+    🔁 What happens during search (preview)
+
+        Later, when you call:
+
+        distances, indices = index.search(query_embedding, top_k)
+
+
+    FAISS:
+
+        Computes L2 distance between query vector and all stored vectors
+
+        Sorts them
+
+    Returns:
+
+        indices → positions in DOCUMENT_CHUNKS
+
+        distances → closeness scores
+
+        Lower L2 distance = more similar.

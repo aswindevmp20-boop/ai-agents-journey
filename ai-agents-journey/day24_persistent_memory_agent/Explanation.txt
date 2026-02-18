@@ -1,0 +1,37 @@
+We extend Day 23’s autonomous agent by adding:
+
+    A memory file (JSON)
+
+    Read memory at startup
+
+    Write memory after every interaction
+
+    So the agent can say:
+
+    “Last time you asked about oceans…”
+
+Architecture
+
+  User Query
+    ↓
+  Load Memory from file
+    ↓
+  LLM + Tool Router + Worker
+    ↓
+  Answer
+    ↓
+  Update Memory file
+
+
+Memory persists even after program exits.
+
+**************************************************************
+
+memory[-5:]
+
+    Takes only the last 5 interactions from memory.
+
+    Prevents the prompt from becoming too long.
+
+
+

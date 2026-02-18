@@ -1,0 +1,41 @@
+Why This Matters
+
+    Some AI tasks:
+
+        Take long time
+
+        Involve multiple steps
+
+        Call multiple tools
+
+        Generate large responses
+
+        You don’t want the client waiting 30 seconds.
+
+    Instead:
+
+        Client submits job
+
+        Server returns job_id immediately
+
+        Task runs in background
+
+        Client polls for result
+
+    Now you’re thinking like a scalable system.
+
+    🏗️ Architecture Change
+
+    Old:
+
+        POST /agent → returns response
+
+
+    New:
+
+        POST /agent → returns job_id
+        GET /status/{job_id} → returns result
+
+
+    This is a job-based execution engine.
+

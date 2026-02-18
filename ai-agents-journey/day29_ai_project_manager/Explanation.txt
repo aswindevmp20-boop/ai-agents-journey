@@ -1,0 +1,28 @@
+
+Given a project goal like:
+
+    "Build a Django REST API with authentication"
+
+The agent will:
+
+    Break it into tasks
+
+    Assign priority (High / Medium / Low)
+
+    Store task status
+
+    Suggest the next task
+
+    Update progress
+
+Architecture
+
+    Project Goal
+    ↓
+    Task Planner
+    ↓
+    Priority Assigner
+    ↓
+    Task Tracker (in memory)
+    ↓
+    Next Task Decision

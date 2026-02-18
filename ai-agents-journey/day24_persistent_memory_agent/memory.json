@@ -1,0 +1,18 @@
+[
+  {
+    "user": "My name is Aswin",
+    "assistant": "Hello Aswin, it's nice to meet you. Is there something I can help you with today?"
+  },
+  {
+    "user": "what is my name ?",
+    "assistant": "Your name is Aswin."
+  },
+  {
+    "user": "calculate 55*9",
+    "assistant": "The result of 55*9 is 495."
+  },
+  {
+    "user": "give me the answer of the calculation done",
+    "assistant": "The result of the calculation is 495."
+  }
+]

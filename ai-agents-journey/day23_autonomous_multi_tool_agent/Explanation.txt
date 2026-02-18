@@ -1,0 +1,143 @@
+Concept
+
+  We build three roles:
+
+    Planner Agent
+
+      Breaks the user request into steps.
+
+    Router Agent
+
+      Decides which tool to use for each step.
+
+    Worker Agent
+
+      Executes the tool and produces results.
+
+Architecture
+
+  User Query
+    ↓
+  Planner Agent (create plan)
+    ↓
+  Router Agent (choose tool per step)
+    ↓
+  Worker Agent (execute tools)
+    ↓
+  Final Answer
+
+
+Example:
+
+  User: Find today’s weather in Delhi and calculate 25 * 4
+  Plan:
+  1. Get weather for Delhi
+  2. Perform calculation
+
+
+*****************************************************************************
+
+Instead of creating separate Python functions for Router Agent and Worker Agent, we embedded their roles into the SYSTEM prompt and let the LLM act as both.
+
+This is a very common and valid design choice.
+
+🧠 Two ways to build multi-agent logic
+
+There are two patterns:
+
+✅ Pattern 1: Prompt-based agents (what we used in Day 23)
+
+We used this:
+
+SYSTEM = {
+  "role": "system",
+  "content": (
+    "You are an autonomous agent.\n"
+    "Choose the correct tool for each step.\n"
+    "Use calculator for math, get_weather for weather, web_search for general knowledge."
+  )
+}
+
+
+So the LLM itself becomes:
+
+🧭 Router (decides which tool to use)
+
+⚙️ Worker (executes via tool calls)
+
+Why this works:
+
+LLMs are very good at:
+
+understanding instructions
+
+choosing tools
+
+sequencing actions
+
+So we don’t need separate Python functions for Router/Worker.
+
+This is:
+✅ simpler
+✅ less code
+✅ easier to debug
+✅ good for learning
+✅ how OpenAI tool-calling is designed
+
+✅ Pattern 2: Explicit multi-agent functions (what you did in Day 18–20)
+
+Earlier you had:
+
+planner_agent()
+worker_agent()
+reporter_agent()
+
+
+Each with its own function and prompt.
+
+This gives:
+
+more control
+
+more structure
+
+more logging
+
+more complexity
+
+This is how frameworks like CrewAI / LangGraph work.
+
+🆚 Comparison
+Approach	How routing happens	When to use
+SYSTEM-based (Day 23)	Inside prompt	Small autonomous agent
+Function-based agents	Separate Python functions	Large multi-agent systems
+Framework (CrewAI)	Graph + roles	Production systems
+
+Both are correct.
+Day 23 just uses the simpler architecture.
+
+🧩 What actually happens in Day 23
+
+Planner agent creates steps
+
+We send steps to the LLM with SYSTEM instructions
+
+LLM decides:
+
+which tool to call
+
+with what arguments
+
+Python executes tool
+
+Tool result sent back
+
+LLM produces final answer
+
+So the Router + Worker logic lives here:
+
+"You are an autonomous agent.
+Choose the correct tool for each step."
+
+
+That’s the brain of both agents.

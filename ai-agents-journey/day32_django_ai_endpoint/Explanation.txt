@@ -1,0 +1,112 @@
+Until now:
+
+    You ran agents via python agent.py
+
+    Everything lived in terminal
+
+Today:
+
+    We expose your AI agent via a Django REST API endpoint.
+
+This is how real AI systems are used:
+
+    Frontend calls backend
+
+    Backend calls AI agent
+
+    Returns structured JSON response
+
+Goal Today
+
+    You will build:
+
+        POST /api/agent/
+        {
+            "query": "Explain vector databases"
+        }
+
+
+    Response:
+
+        {
+            "response": "Vector databases store embeddings..."
+        }
+
+
+    That’s a real backend architecture.
+
+Architecture
+
+    Client (React / Postman)
+            ↓
+    Django API Endpoint
+            ↓
+    AI Agent Logic
+            ↓
+    Groq API
+            ↓
+    Return JSON Response
+
+
+------------------------------------------------------
+
+Set-up
+
+Step-by-Step Setup
+
+    Create Django Project
+    pip install django djangorestframework groq
+    django-admin startproject ai_backend
+    cd ai_backend
+    python manage.py startapp agent_api
+
+    2️⃣ Register App
+
+    In ai_backend/settings.py:
+
+    INSTALLED_APPS = [
+        ...
+        'rest_framework',
+        'agent_api',
+    ]
+
+    3️⃣ Create AI Agent Logic
+
+    Create file:
+
+    agent_api/agent.py
+
+
+    4️⃣ Create API View
+
+
+    agent_api/views.py
+
+
+    5️⃣ Add URL Routing
+
+    agent_api/urls.py:
+
+    Now connect in main ai_backend/urls.py:
+
+
+    6️⃣ Run Server
+
+    python manage.py runserver
+
+------------------------------------------------------
+Expected_ output
+
+
+http://127.0.0.1:8000/api/agent/
+
+POST /api/agent/
+HTTP 200 OK
+Allow: POST, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "query": "What is the use of djangorestframework?",
+    "response": "**Django Rest Framework (DRF) Overview**\n\nDjango Rest Framework (DRF) is a powerful and flexible toolkit for building Web APIs. It provides a simple, consistent, and extensible way to build RESTful APIs.\n\n**Key Uses of Django Rest Framework:**\n\n1. **Building RESTful APIs**: DRF allows you to build RESTful APIs that are easy to consume and interact with.\n2. **Serializing and Deserializing Data**: DRF provides a simple way to serialize and deserialize data between different formats, such as JSON and XML.\n3. **API Authentication and Authorization**: DRF provides built-in support for API authentication and authorization, making it easier to secure your API.\n4. **API Documentation**: DRF provides automatic API documentation generation, making it easier to document your API.\n5. **API Routing**: DRF provides a simple way to define API routes and handle requests.\n\n**Benefits of Using Django Rest Framework:**\n\n1. **Rapid Development**: DRF provides a lot of built-in functionality, making it easier to build APIs quickly.\n2. **Flexible and Customizable**: DRF is highly customizable, allowing you to tailor it to your specific needs.\n3. **Large Community**: DRF has a large and active community, which means there are many resources available to help you learn and troubleshoot.\n4. **Highly Scalable**: DRF is designed to handle large volumes of traffic, making it a good choice for high-traffic APIs.\n\n**Common Use Cases for Django Rest Framework:**\n\n1. **Building Mobile App Backends**: DRF is often used to build backends for mobile apps, providing a RESTful API for the app to interact with.\n2. **Building Web Services**: DRF is used to build web services that provide data to other applications or services.\n3. **Building Microservices**: DRF is used to build microservices that provide a specific functionality or service.\n\nOverall, Django Rest Framework is a powerful and flexible toolkit for building Web APIs. Its ease of use, flexibility, and scalability make it a popular choice for building RESTful APIs."
+}

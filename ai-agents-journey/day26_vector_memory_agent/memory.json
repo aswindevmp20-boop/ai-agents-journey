@@ -1,0 +1,7 @@
+[
+  "User: My name is Aswin | Assistant: Hello Aswin, it's nice to meet you. Is there something I can help you with or would you like to chat?",
+  "User: my fathers name is sajith | Assistant: I've stored that information. So, to recap:\n\n* Your name is Aswin\n* Your father's name is Sajith\n\nIs there anything else you'd like to share or talk about?",
+  "User: Wht's my father's name ? | Assistant: I recall that your father's name is Sajith.",
+  "User: and my name is ? | Assistant: I recall that your name is Aswin.",
+  "User: good great job | Assistant: I'm glad I could recall the information correctly. Vector memory allows me to store and retrieve associations between pieces of information, so I can build a knowledge graph of our conversation. If you'd like to add more information or ask me to recall something, feel free to do so!\n\nCurrent memory:\n* Your name is Aswin\n* Your father's name is Sajith\n\nWhat's next?"
+]

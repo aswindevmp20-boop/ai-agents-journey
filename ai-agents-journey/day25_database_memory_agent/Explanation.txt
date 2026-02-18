@@ -1,0 +1,21 @@
+Instead of saving memory in a file, we store interactions in a SQLite database.
+
+The agent can:
+
+  Save conversations into DB
+
+  Retrieve past relevant memory
+
+  Use memory while answering new questions
+
+Architecture
+
+  User Query
+    ↓
+  Retrieve relevant memory from DB
+    ↓
+  LLM + Tools
+    ↓
+  Answer
+    ↓
+  Store interaction in DB

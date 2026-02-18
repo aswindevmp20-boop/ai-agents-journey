@@ -1,0 +1,128 @@
+1. What is this URL?
+https://api.open-meteo.com/v1/forecast?latitude=28.6&longitude=77.2&current_weather=true
+
+
+This is a REST API Endpoint.
+
+It’s a website, but instead of returning HTML like a normal webpage, it returns JSON data that machines can read.
+
+2. Structure of a Weather API URL
+
+Let’s break it down:
+
+https://api.open-meteo.com/
+          |
+          |-- Main website (server)
+
+/v1/forecast
+     |
+     |-- API endpoint (weather forecast)
+
+?latitude=28.6
+         |
+         |-- Query parameter #1
+
+&longitude=77.2
+           |
+           |-- Query parameter #2
+
+&current_weather=true
+                |
+                |-- Query parameter #3
+
+3. Why do we pass latitude & longitude?
+
+Because weather APIs don’t understand “Delhi”.
+
+They only understand coordinates.
+
+Example:
+
+City	Latitude	Longitude
+Delhi	28.6	77.2
+Mumbai	19.07	72.87
+New York	40.71	-74.01
+
+So we map:
+
+"Delhi" → lat=28.6, lon=77.2
+
+4. What does the API return?
+
+When you open the URL in a browser, the server responds with JSON:
+
+{
+  "latitude": 28.6,
+  "longitude": 77.2,
+  "current_weather": {
+    "temperature": 23.4,
+    "windspeed": 5.3,
+    "weathercode": 3
+  }
+}
+
+
+This is machine-readable weather data.
+
+That’s why, in Python, we do:
+
+resp = requests.get(url).json()
+
+
+This turns JSON → Python dictionary.
+
+Then:
+
+resp.get("current_weather")
+
+
+returns:
+
+{
+  "temperature": 23.4,
+  "windspeed": 5.3,
+  "weathercode": 3
+}
+
+5. Why are we building the URL with Python?
+
+Because we build a dynamic URL based on the user's city.
+
+Example:
+
+User says:
+
+What is the weather in Delhi?
+
+
+Agent does:
+
+Convert city → coordinates:
+
+CITY_COORDS["delhi"] → {"lat": 28.6, "lon": 77.2}
+
+
+Insert into the URL:
+
+f"https://api.open-meteo.com/v1/forecast?
+ latitude={lat}&longitude={lon}&current_weather=true"
+
+
+Becomes:
+
+https://api.open-meteo.com/v1/forecast?latitude=28.6&longitude=77.2&current_weather=true
+
+
+That’s how the agent accesses weather for ANY city.
+
+6. Simple Analogy
+
+Think of the URL like a question:
+
+Hey weather server, what is the weather
+at latitude=28.6 & longitude=77.2?
+
+
+The server responds:
+
+It’s 23°C with windspeed 5 km/h.

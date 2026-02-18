@@ -1,0 +1,31 @@
+You’ll build an agent that:
+
+    Accepts a goal, not just a question
+
+    Breaks it into tasks
+
+    Tracks task status
+
+    Keeps working until the goal is completed
+
+This is the backbone of:
+
+    AutoGPT
+
+    AI project managers
+
+    Autonomous research agents
+
+Architecture
+
+    User Goal
+    ↓
+    Goal Planner
+    ↓
+    Task List (with status)
+    ↓
+    Task Executor
+    ↓
+    Progress Tracker
+    ↓
+    Goal Completed ✅
