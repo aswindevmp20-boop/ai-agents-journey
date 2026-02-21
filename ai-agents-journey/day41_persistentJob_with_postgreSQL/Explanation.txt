@@ -1,0 +1,70 @@
+docker compose down -v
+docker compose up --build
+
+Until now (Day 39–40):
+
+    Jobs stored in Redis
+
+    Results stored in Redis
+
+    If Redis restarts → everything is gone
+
+    That’s not durable.
+
+Today we introduce:
+
+⭐ Day 41 — Persistent Job Tracking with PostgreSQL
+
+Now your architecture becomes:
+
+    Client
+    ↓
+    API Server
+    ↓
+    Redis Queue
+    ↓
+    Worker
+    ↓
+    PostgreSQL (Persistent Job Store)
+
+
+This is real production architecture.
+
+Why This Matters
+
+Redis is:
+
+    Fast
+
+    Great for queues
+
+    In-memory
+
+    Not ideal for long-term storage
+
+PostgreSQL gives:
+
+    Durable job history
+
+    Audit trail
+
+    Queryable metadata
+
+    Real database-backed system
+
+    Now you’re building an AI execution platform.
+
+Architecture Upgrade
+
+We will:
+
+    Add PostgreSQL container
+
+    Save job metadata in DB
+
+    Update job status in DB
+
+    Query DB for results instead of Redis
+
+    Redis → queue only
+    Postgres → job state
