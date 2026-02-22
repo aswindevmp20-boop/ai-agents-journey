@@ -1,0 +1,37 @@
+We will add:
+
+    API Key authentication
+
+    Request rate limiting
+
+    Protection against abuse
+
+Now your system becomes secure and controlled.
+
+Why This Matters
+
+    Without authentication:
+
+        curl /submit 10000 times
+
+        Your worker melts.
+
+    Real AI systems always protect:
+
+        Expensive LLM calls
+
+        Infrastructure resources
+
+        Job queues
+
+        This is backend maturity.
+
+Architecture Upgrade
+
+    Client
+    ↓
+    Auth check
+    ↓
+    Rate limiter
+    ↓
+    Submit job
