@@ -1,0 +1,48 @@
+Right now:
+
+You have 1 worker container.
+
+If 20 jobs come in → they are processed sequentially.
+
+Today we enable:
+
+Multiple workers consuming from the same Redis queue concurrently.
+
+This is real distributed scaling.
+
+🧠 Why This Matters
+
+Production AI systems must:
+
+Handle bursts of traffic
+
+Process jobs in parallel
+
+Scale horizontally without rewriting code
+
+Redis supports multiple consumers naturally.
+
+This is one of the cleanest scaling wins in backend engineering.
+
+🏗️ Architecture After Day 43
+Client
+   ↓
+API
+   ↓
+Redis Queue
+   ↓
+Worker 1
+Worker 2
+Worker 3
+   ↓
+PostgreSQL
+
+All workers pull from the same queue.
+
+📂 Files to Update
+
+Only:
+
+docker-compose.yml
+
+No code changes required.
