@@ -1,0 +1,48 @@
+Right now, all jobs are treated equally.
+
+If:
+
+   A low-priority analytics job
+
+   A critical real-time user query
+
+   Both go into the same queue.
+
+   That’s not production-grade.
+
+Today we introduce:
+
+   Priority-based task routing using multiple Redis queues.
+
+Why This Matters
+
+   Real AI systems:
+
+      Separate background jobs from real-time queries
+
+      Prioritize premium users
+
+      Prioritize system-critical tasks
+
+      This is systems design maturity.
+
+New Architecture
+
+                  ┌──────────────┐
+   Client ───────▶ │ API Server   │
+                  └──────┬───────┘
+                        │
+            ┌────────────┴────────────┐
+            │                         │
+      high_priority_queue       normal_queue
+            │                         │
+      Worker (priority)        Worker (normal)
+
+High-priority workers check their queue first.
+
+Files To Update
+
+   api_server/main.py      ← UPDATE
+   worker/worker.py        ← UPDATE
+
+No new services needed.
