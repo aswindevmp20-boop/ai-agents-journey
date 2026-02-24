@@ -1,0 +1,54 @@
+This is extremely practical and resume-worthy.
+
+Right now:
+
+   If a user asks the same question twice →
+   Your system:
+
+   Pushes job to queue
+
+   Worker runs LLM
+
+   Stores result
+
+   That’s wasteful.
+
+   Today we add:
+
+      Smart Response Caching
+
+      Before creating a new job:
+
+      Check if the same query already exists
+
+      If yes → return cached result
+
+      If no → create new job
+
+      Now your system becomes efficient.
+
+   Why This Is Important
+
+   Real AI systems:
+
+      Avoid repeated expensive LLM calls
+
+      Reduce latency
+
+      Reduce cost
+
+      Improve scalability
+
+      Caching is core backend intelligence.
+
+Files To Update
+
+day44_caching_layer/
+│
+├── api_server/
+│   └── main.py         ← UPDATE
+│
+├── shared/
+│   └── cache.py        ← NEW
+
+No Docker changes needed.
