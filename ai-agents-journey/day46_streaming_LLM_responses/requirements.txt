@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+redis
+groq
+python-dotenv
+psycopg2-binary
+slowapi
+sse-starlette
