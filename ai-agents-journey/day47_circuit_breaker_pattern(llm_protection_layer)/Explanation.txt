@@ -1,0 +1,64 @@
+You now have:
+
+   Distributed workers
+
+   Retry logic
+
+   Priority queues
+
+   Streaming
+
+   Caching
+
+   Rate limiting
+
+   Observability
+
+But here’s the hidden danger:
+
+   If Groq starts failing…
+   If latency spikes…
+   If rate limits trigger repeatedly…
+
+Your system keeps hammering the LLM.
+
+That’s dangerous.
+
+Day 47 — Circuit Breaker Pattern (LLM Protection Layer)
+
+   Today we protect your system from cascading failures.
+
+   This is a real distributed systems pattern.
+
+   What Is a Circuit Breaker?
+
+      Think of it like an electrical fuse.
+
+      If too many failures happen:
+
+      Stop calling the LLM
+
+      Fail fast
+
+      Let system recover
+
+      Instead of:
+
+         Fail → Retry → Fail → Retry → Hammer API → Crash
+
+      We switch to:
+
+         Fail repeatedly → Open circuit → Reject immediately → Cooldown → Try again
+
+      Circuit Breaker States
+
+         CLOSED     → Normal operation
+         OPEN       → Blocking calls
+         HALF-OPEN  → Testing recovery
+
+   Files To Update
+
+      shared/circuit_breaker.py   ← NEW
+      shared/llm_service.py       ← UPDATE
+
+      No API changes needed.
