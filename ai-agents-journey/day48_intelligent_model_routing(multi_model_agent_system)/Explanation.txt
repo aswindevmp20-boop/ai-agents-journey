@@ -1,0 +1,52 @@
+Until now:
+
+   You’ve been calling one model:
+
+      model="llama-3.3-70b-versatile"
+
+   That’s fine for demos.
+
+   But production AI systems don’t use one model for everything.
+
+   They route intelligently.
+
+   Why Model Routing Matters
+
+Different tasks need different models:
+
+   Retrieval / analysis → bigger reasoning model
+
+   Chat → fast lightweight model
+
+   Summarization → cheaper model
+
+   Real-time streaming → low-latency model
+
+Using one model for all tasks:
+
+   Increases cost
+
+   Increases latency
+
+   Reduces control
+
+   Today we fix that.
+
+Architecture Upgrade
+
+   Client
+      ↓
+   API
+      ↓
+   Task Classifier (Router)
+      ↓
+   Model Selection Logic
+      ↓
+   LLM Service (dynamic model)
+
+Now your system decides which model to use.
+
+Files To Update
+
+   shared/model_router.py   ← NEW
+   shared/llm_service.py    ← UPDATE
