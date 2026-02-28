@@ -11,7 +11,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from fastapi.responses import JSONResponse
-from shared.llm_service import generate_stream
+from shared.llm_service import generate_response
 
 app=FastAPI()
 
@@ -117,7 +117,7 @@ def stream_response(body: QueryRequest):
             {"role": "user", "content": body.query}
         ]
 
-        for token in generate_stream(messages):
+        for token in generate_response(messages):
             yield token
 
     return StreamingResponse(token_generator(), media_type="text/plain")
