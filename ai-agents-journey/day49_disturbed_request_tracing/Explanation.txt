@@ -1,0 +1,87 @@
+Right now your system has:
+
+   Multi-worker distributed execution
+
+   Priority queues
+
+   Caching
+
+   Streaming
+
+   Circuit breaker
+
+   Model routing
+
+   Observability (basic metrics + logs)
+
+But here’s the missing piece:
+
+   When a request flows through:
+      API → Redis → Worker → LLM → DB
+
+   You cannot trace the full lifecycle of a single request across services.
+
+   If something is slow:
+       You don’t know where.
+
+   Today we fix that.
+
+Day 49 — Distributed Request Tracing (Correlation IDs)
+
+   We will implement:
+
+      Unique request ID per submission
+
+      Propagate it through API → Redis → Worker → LLM
+
+      Include it in structured logs
+
+      Make debugging traceable
+
+      This is production-grade observability.
+
+   Why This Matters
+
+   Imagine a user says:
+
+      “My request took 9 seconds.”
+
+   Without tracing:
+      You dig through logs blindly.
+
+   With tracing:
+      You filter logs by request_id.
+
+   Boom. You see everything.
+
+   Architecture After Day 49
+
+      Client
+         ↓
+      API (request_id=abc123)
+         ↓
+      Redis (job includes request_id)
+         ↓
+      Worker (logs include request_id)
+         ↓
+      LLM call (timed + tagged)
+         ↓
+      Postgres
+
+   Every log line now carries the same correlation ID.
+
+   Files To Update
+      api_server/main.py      ← UPDATE
+      worker/worker.py        ← UPDATE
+      shared/logger.py        ← UPDATE
+
+
+What logs now look like
+
+{
+  "asctime": "...",
+  "levelname": "INFO",
+  "name": "worker",
+  "message": "Processing job",
+  "request_id": "c4a2-93d1-88ab"
+}
