@@ -1,0 +1,44 @@
+👉 What happens if 10,000 requests hit your API at once?
+
+   Even with rate limiting, your queue can explode.
+
+Today we prevent overload collapse.
+
+Day 50 — Load Shedding (Graceful Degradation Under Pressure)
+
+   Load shedding means:
+
+      When system is overloaded, reject new work intelligently instead of crashing.
+
+   This is what Netflix, AWS, and high-scale systems do.
+
+   Why This Matters
+
+   Without load shedding:
+
+      Redis queue grows infinitely
+
+      Workers get overwhelmed
+
+      Latency spikes
+
+      DB slows down
+
+      System becomes unstable
+
+   With load shedding:
+
+      You define a max queue threshold
+
+      If queue too large → reject new jobs
+
+      System stays stable
+
+   Architecture Concept
+      If queue_length > MAX_THRESHOLD:
+         Reject new request (503 Service Unavailable)
+      Else:
+         Accept job
+
+   Files To Update
+      api_server/main.py   ← UPDATE
