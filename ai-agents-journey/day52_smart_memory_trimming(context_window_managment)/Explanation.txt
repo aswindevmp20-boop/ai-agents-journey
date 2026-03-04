@@ -1,0 +1,58 @@
+Yesterday (Day 51) you added persistent conversation memory.
+
+But that creates a new real-world problem:
+
+   LLMs have a context window limit.
+
+   If a conversation goes on for a long time, the prompt becomes too large.
+
+   Example:
+
+   Conversation history: 200 messages
+   LLM context limit: ~8k / 32k tokens
+
+   Eventually the system will fail or become extremely slow.
+
+   So today we implement Context Window Management.
+
+Day 52 — Smart Memory Trimming (Context Window Management)
+
+   We will implement:
+
+      Limit conversation history
+
+      Keep recent messages
+
+      Drop old messages
+
+      Prevent context overflow
+
+      This is how real systems like ChatGPT, Claude, Perplexity manage conversations.
+
+   The Problem
+
+      Right now your code loads all messages:
+
+      cur.execute(
+         "SELECT role, content FROM conversations WHERE session_id=%s ORDER BY created_at",
+         (body.session_id,)
+      )
+
+      If a user talks 100 times → 100 messages sent to LLM.
+
+      That’s expensive and slow.
+
+   Solution
+
+      We limit history.
+
+      Example rule:
+
+         Keep last 10 messages
+         Drop older ones
+
+   Architecture:
+       DB history → Trim → Send to LLM
+
+   File To Update
+      api_server/main.py
