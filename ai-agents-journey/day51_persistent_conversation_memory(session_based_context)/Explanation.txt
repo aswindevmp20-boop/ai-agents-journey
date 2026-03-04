@@ -1,0 +1,69 @@
+Up to now, your system handles independent requests.
+
+Every query is stateless.
+
+But real AI systems need:
+
+   Conversation continuity
+
+   Cross-request memory
+
+   Context retention
+
+Today we give your platform persistent conversation memory.
+
+⭐ Day 51 — Persistent Conversation Memory (Session-Based Context)
+
+   We will implement:
+
+      session_id support
+
+      Store conversation history in PostgreSQL
+
+      Retrieve history before LLM call
+
+      Inject past messages into prompt
+
+      Now your system becomes stateful.
+
+   Why This Matters
+
+      Without memory:
+
+         User:
+
+            Explain AI.
+
+         User:
+
+            Give an example.
+
+            Second query has no context.
+
+      With memory:
+
+         System understands:
+
+            “Give an example of AI.”
+
+            That’s real conversational AI.
+
+Architecture Upgrade
+
+   Client (session_id=abc123)
+      ↓
+   API
+      ↓
+   Load past messages from DB
+      ↓
+   Append new message
+      ↓
+   Send full context to LLM
+      ↓
+   Store response back to DB
+
+
+Files To Update
+   api_server/main.py      ← UPDATE
+   shared/llm_service.py   ← UPDATE
+   shared/db.py            ← UPDATE
