@@ -1,0 +1,85 @@
+Up to now your system does:
+
+   Accept a query
+
+   Retrieve context (RAG)
+
+   Send to LLM
+
+   Return answer
+
+   But real AI agents break problems into steps.
+
+Example:
+
+   User asks:
+
+      "Research the threats to ocean health and summarize the key points."
+
+   A good agent should:
+
+      1️⃣ Plan the task
+      2️⃣ Retrieve information
+      3️⃣ Analyze results
+      4️⃣ Produce final answer
+
+Today we implement the Planner → Worker agent pattern.
+
+Day 53 — Multi-Agent Orchestration (Planner + Worker)
+
+We introduce two agents:
+
+   Planner Agent
+
+   Responsible for:
+
+   Understanding the query
+
+   Creating a task plan
+
+   Example output:
+
+      {
+      "steps": [
+         "search documents for ocean health threats",
+         "extract key findings",
+         "summarize into bullet points"
+      ]
+      }
+
+   Worker Agent
+
+      Responsible for:
+
+         Executing each step
+
+      Producing the final answer
+
+Architecture
+
+      User Query
+         ↓
+      Planner Agent
+         ↓
+      Task Plan
+         ↓
+      Worker Agent
+         ↓
+      Final Answer
+
+   This pattern is used in:
+
+      AutoGPT style systems
+
+      LangGraph
+
+      CrewAI
+
+      Autonomous research agents
+
+Files To Add
+
+   We will create a new module.
+
+   shared/
+      planner_agent.py
