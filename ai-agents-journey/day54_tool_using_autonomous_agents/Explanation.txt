@@ -1,0 +1,69 @@
+Up to Day 53 you built:
+
+   Planner Agent → creates a plan
+
+   Worker Agent → executes the plan
+
+   But the worker still relies only on the LLM.
+
+   Real AI agents can use tools.
+
+   Example:
+
+      User asks:
+
+         "What are the latest developments in artificial intelligence?"
+
+   A real agent should:
+
+         1️⃣ Search the web
+         2️⃣ Read results
+         3️⃣ Summarize them
+
+   Today we implement Tool-Using Agents (ReAct style).
+
+Day 54 — Tool-Using Autonomous Agents
+
+   We will allow the agent to:
+
+      Decide which tool to call
+
+      Execute the tool
+
+      Continue reasoning
+
+      Produce final answer
+
+   This is the ReAct architecture used in many agent systems.
+
+   What ReAct Means
+
+      ReAct = Reason + Act
+
+   Example reasoning loop:
+
+      Thought: I should search the web
+      Action: web_search("AI developments 2025")
+      Observation: [search results]
+      Thought: summarize key developments
+      Final Answer: ...
+
+   Architecture
+
+      User Query
+         ↓
+      Planner Agent
+         ↓
+      Worker Agent
+         ↓
+      Tool Execution Loop
+         ↓
+      Final Answer
+
+   The worker can now call tools dynamically.
+
+   Files To Add
+
+      We will add a new module.
+
+         shared/tools.py   
