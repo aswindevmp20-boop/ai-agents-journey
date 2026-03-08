@@ -1,0 +1,69 @@
+Day 55 is where your system becomes much more structured and reliable.
+
+   Right now your agent loop (from Day 54) is basically:
+
+      LLM → maybe call tool → LLM → maybe call tool → final answer
+
+   That works, but it’s uncontrolled. The agent could:
+
+      loop forever
+
+      call tools randomly
+
+      produce inconsistent flows
+
+   So today we introduce something used in real agent frameworks like LangGraph, Temporal workflows, and Airflow-style systems.
+
+Day 55 — Agent Workflow Engine (State Machine Agents)
+
+   Instead of free-form reasoning, we define states.
+
+   Example workflow:
+
+      START
+      ↓
+      PLAN
+      ↓
+      RETRIEVE (tools)
+      ↓
+      ANALYZE
+      ↓
+      FINALIZE
+      ↓
+      END
+
+   Now your agent becomes a workflow engine instead of just a chat loop.
+
+   Why This Matters
+
+   Real AI systems must be:
+
+      predictable
+
+      debuggable
+
+      controlled
+
+      reproducible
+
+      State machines give you that.
+
+   Architecture
+
+      User Query
+         ↓
+      Planner
+         ↓
+      State Machine
+         ↓
+      Retrieve → Analyze → Finalize
+         ↓
+      Final Answer
+
+   Each step has a defined purpose.
+
+   New File
+
+      Create:
+
+         shared/workflow_agent.py
