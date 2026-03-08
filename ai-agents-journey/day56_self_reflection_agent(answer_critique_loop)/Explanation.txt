@@ -1,69 +1,74 @@
-Day 55 is where your system becomes much more structured and reliable.
+Excellent — Day 56 is where your agents become self-improving.
 
-   Right now your agent loop (from Day 54) is basically:
-
-      LLM → maybe call tool → LLM → maybe call tool → final answer
-
-   That works, but it’s uncontrolled. The agent could:
-
-      loop forever
-
-      call tools randomly
-
-      produce inconsistent flows
-
-   So today we introduce something used in real agent frameworks like LangGraph, Temporal workflows, and Airflow-style systems.
-
-Day 55 — Agent Workflow Engine (State Machine Agents)
-
-   Instead of free-form reasoning, we define states.
-
-   Example workflow:
-
-      START
-      ↓
-      PLAN
-      ↓
-      RETRIEVE (tools)
-      ↓
-      ANALYZE
-      ↓
-      FINALIZE
-      ↓
-      END
-
-   Now your agent becomes a workflow engine instead of just a chat loop.
-
-   Why This Matters
-
-   Real AI systems must be:
-
-      predictable
-
-      debuggable
-
-      controlled
-
-      reproducible
-
-      State machines give you that.
-
-   Architecture
+   Right now your system workflow is:
 
       User Query
          ↓
       Planner
          ↓
-      State Machine
+      Workflow Agent
          ↓
-      Retrieve → Analyze → Finalize
+      Tools
          ↓
       Final Answer
 
-   Each step has a defined purpose.
+   But there’s a weakness:
+
+      The LLM might give a bad or incomplete answer.
+
+Today we fix that by introducing Self-Reflection Agents.
+
+This pattern is used in research systems like Reflexion, Self-Refine, and GPT-Critic loops.
+
+Day 56 — Self-Reflection Agent (Answer Critique Loop)
+
+   We introduce a second evaluation step:
+
+      Worker produces answer
+            ↓
+      Critic agent evaluates it
+            ↓
+      If weak → refine answer
+            ↓
+      Return improved answer
+
+   So the AI now checks its own work.
+
+   Why This Matters
+
+      LLMs often produce:
+
+         vague answers
+
+         incomplete explanations
+
+         hallucinated facts
+
+      Self-reflection improves:
+
+         accuracy
+
+         reasoning quality
+
+         reliability
+
+   Architecture
+
+      User Query
+         ↓
+      Workflow Agent
+         ↓
+      Initial Answer
+         ↓
+      Critic Agent
+         ↓
+      Refined Answer
+         ↓
+      Final Output
 
    New File
 
       Create:
 
-         shared/workflow_agent.py
+      shared/reflection_agent.py
+      update workflow_agent
