@@ -1,0 +1,78 @@
+Day 60 — Self-Improving AI Agent (Learning From Feedback)
+
+   This turns your platform into a learning system.
+
+   Right now your AI platform can:
+
+   answer questions
+
+   research topics
+
+   use tools
+
+   run workflows
+
+   But it does not learn from users.
+
+   Day 60 introduces a feedback-driven improvement loop.
+
+   This is similar to how systems like:
+
+      ChatGPT (RLHF)
+
+      Perplexity feedback
+
+      GitHub Copilot telemetry
+
+      Claude evaluation loops
+
+      improve their responses.
+
+   What This Feature Does
+
+      Users can now:
+
+         👍 Upvote good responses
+
+         👎 Downvote bad responses
+
+      Provide feedback
+
+      Your system will:
+
+         1️⃣ Store feedback
+         2️⃣ Analyze patterns
+         3️⃣ Adjust agent strategies
+
+      This creates a self-improving AI platform.
+
+   Architecture
+
+      User Query
+         ↓
+      Agent System
+         ↓
+      Generated Response
+         ↓
+      User Feedback
+         ↓
+      Feedback Storage
+         ↓
+      Learning Agent
+         ↓
+      Improved Future Responses
+
+   New Table (PostgreSQL)
+
+   Add a new table.
+
+      CREATE TABLE feedback (
+         id SERIAL PRIMARY KEY,
+         job_id TEXT,
+         rating INTEGER,
+         comment TEXT,
+         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+   New File
+      shared/learning_agent.py
